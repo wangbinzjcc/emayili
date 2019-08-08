@@ -23,7 +23,7 @@
 #' \dontrun{
 #' smtp(msg, verbose = TRUE)
 #' }
-server <- function(host, port = 25, username, password) {
+server <- function(host, port = 25, username = NULL, password = NULL) {
   function(msg, verbose = FALSE){
     tmpfile = tempfile()
     #
