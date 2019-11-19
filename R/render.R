@@ -1,11 +1,8 @@
-library(emayili)
-library(magrittr)
-
 #' Title
 #'
-#' @param msg
-#' @param content
-#' @param type
+#' @param msg A message object.
+#' @param rmd_filepath Path to a Rmd file.
+#' @param quiet Suppress output.
 #'
 #' @return
 #' @export
@@ -34,24 +31,3 @@ render <- function(msg, rmd_filepath, quiet = TRUE){
 
   invisible(msg)
 }
-
-email <- envelope()
-
-email <- email %>%
-  from("Sentinel@derivco.co.za") %>%
-  to("collierab@gmail.com")
-
-email <- email %>% subject("This is a plain text message!")
-
-email <- email %>% render("test.Rmd", quiet = FALSE)
-
-cat(message(email))
-
-smtp <- server(host = "mail.mgsops.net",
-               port = 25
-               # username = "andrew@exegetic.biz",
-               # password = "m2Q9WSbvjf7U"
-               )
-
-smtp(email, verbose = TRUE)
-
