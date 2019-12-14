@@ -7,6 +7,7 @@
 #' @param port Port that the SMTP server is listening on.
 #' @param username Username for SMTP server.
 #' @param password Password for SMTP server.
+#' @param insecure Whether to ignore SSL issues.
 #'
 #' @return A function which is used to send messages to the server.
 #' @export
@@ -23,27 +24,47 @@
 #' \dontrun{
 #' smtp(msg, verbose = TRUE)
 #' }
-server <- function(host, port = 25, username = NULL, password = NULL) {
+server <- function(host, port = 25, username = NULL, password = NULL, insecure = FALSE) {
   function(msg, verbose = FALSE){
     tmpfile = tempfile()
     #
     writeLines(message(msg), tmpfile)
 
-    # If you get the "The certificate chain was issued by an authority that is not trusted." error then
-    # can add in ssl_verifypeer = FALSE.
+
+    h <- new_handle(
+      mail_from = msg$header$From,
+      mail_rcpt = c(msg$header$To, msg$header$Cc, msg$header$Bcc)
+    )
+
+    if (!is.null(username)) {
+      handle_setopt(h, username = username, password = password)
+    }
+
+    # See curl::curl_options() for available options.
     #
-    h <- new_handle(username = username,
-                    password = password,
-                    mail_from = msg$header$From,
-                    mail_rcpt = c(msg$header$To, msg$header$Cc, msg$header$Bcc))
+    # * SSL
+    #
+    # - If you get the "The certificate chain was issued by an authority that is not trusted." error then
+    #   can add in ssl_verifypeer = FALSE.
+    # - Other flags:
+    #
+    #   - ssl_verifyhost
+    #   - ssl_verifypeer
+    #   - ssl_verifystatus
+    #
+    #   Run curl_options('ssl') to see other options.
+    #
+    if (insecure) {
+      handle_setopt(h, ssl_verifypeer = FALSE)
+    }
+    #
+    handle_setopt(h, verbose = verbose)
 
     con <- file(tmpfile, open = 'rb')
     #
     handle_setopt(h, readfunction = function(nbytes, ...) {
       readBin(con, raw(), nbytes)
     }, upload = TRUE)
-
-    handle_setopt(h, verbose = verbose)
 
     port <- as.integer(port)
     if (port %in% c(465, 587)) {

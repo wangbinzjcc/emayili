@@ -1,7 +1,7 @@
 Type: Package
 Package: emayili
 Title: Send email messages
-Version: 0.1.1
+Version: 0.2.1
 Authors@R: 
     c(person(given = c("Andrew", "B."),
              family = "Collier",
@@ -15,7 +15,15 @@ Authors@R:
              family = "Bichat",
              role = "ctb",
              email = "a.bichat@yahoo.fr",
-             comment = c(ORCID = "0000-0001-6599-7081")))
+             comment = c(ORCID = "0000-0001-6599-7081")),
+      person(given = "Daniel",
+             family = "Fahey",
+             role = "ctb",
+             email = "dpfahey@gmail.com"),
+      person(given = c("Johann",  "R."),
+             family = "Kleinbub",
+             role = "ctb",
+             email = "johann.kleinbub@gmail.com"))
 Description: A package for writing and sending emails.
     Minimal dependencies.
 License: GPL-3
@@ -23,13 +31,15 @@ Imports:
     base,
     base64enc,
     curl,
+    digest,
     glue,
     httr,
     magrittr,
     mime,
-    knitr
+    knitr,
+    stringi
 Suggests:
     testthat (>= 2.1.0)
 Encoding: UTF-8
 LazyData: true
-RoxygenNote: 6.1.1
+RoxygenNote: 7.0.1

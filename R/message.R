@@ -17,17 +17,21 @@ header <- function(msg) {
 }
 
 message <- function(msg){
+  # CONTENT_TYPE = "multipart/mixed"
+  CONTENT_TYPE = "multipart/related"
+
   message <- list(
     header(msg),
     "MIME-Version: 1.0",
-    sprintf('Content-type: multipart/mixed; boundary="%s"', msg$boundary)
+    sprintf('Content-type: %s; boundary="%s"', CONTENT_TYPE, msg$boundary)
   )
 
-  for (part in msg$parts) {
-    message <- c(message, paste0("\n--", msg$boundary, "\n", format(part)))
+  if (length(msg$parts)) {
+    for (part in msg$parts) {
+      message <- c(message, paste0("\n--", msg$boundary, "\n", format(part)))
+    }
+    message <- c(message, paste0("\n--", msg$boundary, "--\n"))
   }
-
-  message <- c(message, paste0("\n--", msg$boundary, "--\n"))
 
   do.call(paste0, c(list(message), collapse = "\n"))
 }
