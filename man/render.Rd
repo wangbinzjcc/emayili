@@ -2,7 +2,7 @@
 % Please edit documentation in R/render.R
 \name{render}
 \alias{render}
-\title{Title}
+\title{Render R Markdown document into email}
 \usage{
 render(msg, rmd_filepath, quiet = TRUE)
 }
@@ -13,6 +13,9 @@ render(msg, rmd_filepath, quiet = TRUE)
 
 \item{quiet}{Suppress output.}
 }
+\value{
+
+}
 \description{
-Title
+Render R Markdown document into email
 }
